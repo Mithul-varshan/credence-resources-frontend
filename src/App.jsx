@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 // Use relative API calls since we have proxy configured
-const API_BASE_URL = '/api';
+// const API_BASE_URL = '/api';
 
 function App() {
   const [salesReports, setSalesReports] = useState([]);
@@ -105,10 +105,10 @@ function App() {
 
     try {
       if (editingId) {
-        await axios.put(`${API_BASE_URL}/sales/${editingId}`, formData);
+        await axios.put(`https://credence-resources-backend.onrender.com/sales/${editingId}`, formData);
         alert('Sales report updated successfully');
       } else {
-        await axios.post(`${API_BASE_URL}/sales`, formData);
+        await axios.post(`https://credence-resources-backend.onrender.com/sales`, formData);
         alert('Sales report created successfully');
       }
       resetForm();
