@@ -1,40 +1,40 @@
 // src/App.jsx
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-const API_BASE_URL = '/api/sales';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/sales`;
 
 function App() {
   const [salesReports, setSalesReports] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
-    startDate: '',
-    endDate: '',
-    vesselName: '',
-    purchaseOrderNumber: ''
+    startDate: "",
+    endDate: "",
+    vesselName: "",
+    purchaseOrderNumber: "",
   });
 
   const [formData, setFormData] = useState({
-    invoice_date: '',
-    firc_date: '',
-    shipping_bill_date: '',
-    purchase_order_number: '',
-    purchase_order_date: '',
-    qty: '',
-    rate_in_usd: '',
-    firc_number: '',
-    no_of_containers_bulk: '',
-    inward_amount: '',
-    exchange_rate: '',
-    shipping_bill_number: '',
-    vessel_name: '',
-    bill_number: '',
-    shipped_on_board_date: ''
+    invoice_date: "",
+    firc_date: "",
+    shipping_bill_date: "",
+    purchase_order_number: "",
+    purchase_order_date: "",
+    qty: "",
+    rate_in_usd: "",
+    firc_number: "",
+    no_of_containers_bulk: "",
+    inward_amount: "",
+    exchange_rate: "",
+    shipping_bill_number: "",
+    vessel_name: "",
+    bill_number: "",
+    shipped_on_board_date: "",
   });
 
   useEffect(() => {
@@ -45,54 +45,55 @@ function App() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (filters.startDate) params.append('startDate', filters.startDate);
-      if (filters.endDate) params.append('endDate', filters.endDate);
-      if (filters.vesselName) params.append('vessel_name', filters.vesselName);
-      if (filters.purchaseOrderNumber) params.append('purchase_order_number', filters.purchaseOrderNumber);
+      if (searchTerm) params.append("search", searchTerm);
+      if (filters.startDate) params.append("startDate", filters.startDate);
+      if (filters.endDate) params.append("endDate", filters.endDate);
+      if (filters.vesselName) params.append("vessel_name", filters.vesselName);
+      if (filters.purchaseOrderNumber)
+        params.append("purchase_order_number", filters.purchaseOrderNumber);
 
       const response = await axios.get(`${API_BASE_URL}`, { params });
       setSalesReports(response.data);
     } catch (error) {
-      console.error('Error fetching sales reports:', error);
-      alert('Error fetching sales reports');
+      console.error("Error fetching sales reports:", error);
+      alert("Error fetching sales reports");
     }
     setLoading(false);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const resetForm = () => {
     setFormData({
-      invoice_date: '',
-      firc_date: '',
-      shipping_bill_date: '',
-      purchase_order_number: '',
-      purchase_order_date: '',
-      qty: '',
-      rate_in_usd: '',
-      firc_number: '',
-      no_of_containers_bulk: '',
-      inward_amount: '',
-      exchange_rate: '',
-      shipping_bill_number: '',
-      vessel_name: '',
-      bill_number: '',
-      shipped_on_board_date: ''
+      invoice_date: "",
+      firc_date: "",
+      shipping_bill_date: "",
+      purchase_order_number: "",
+      purchase_order_date: "",
+      qty: "",
+      rate_in_usd: "",
+      firc_number: "",
+      no_of_containers_bulk: "",
+      inward_amount: "",
+      exchange_rate: "",
+      shipping_bill_number: "",
+      vessel_name: "",
+      bill_number: "",
+      shipped_on_board_date: "",
     });
     setEditingId(null);
     setShowForm(false);
@@ -105,61 +106,69 @@ function App() {
     try {
       if (editingId) {
         await axios.put(`${API_BASE_URL}/${editingId}`, formData);
-        alert('Sales report updated successfully');
+        alert("Sales report updated successfully");
       } else {
         await axios.post(`${API_BASE_URL}`, formData);
-        alert('Sales report created successfully');
+        alert("Sales report created successfully");
       }
       resetForm();
       fetchSalesReports();
     } catch (error) {
-      console.error('Error saving sales report:', error);
-      alert('Error saving sales report');
+      console.error("Error saving sales report:", error);
+      alert("Error saving sales report");
     }
     setLoading(false);
   };
 
   const handleEdit = (report) => {
     setFormData({
-      invoice_date: report.invoice_date ? report.invoice_date.split('T')[0] : '',
-      firc_date: report.firc_date ? report.firc_date.split('T')[0] : '',
-      shipping_bill_date: report.shipping_bill_date ? report.shipping_bill_date.split('T')[0] : '',
-      purchase_order_number: report.purchase_order_number || '',
-      purchase_order_date: report.purchase_order_date ? report.purchase_order_date.split('T')[0] : '',
-      qty: report.qty || '',
-      rate_in_usd: report.rate_in_usd || '',
-      firc_number: report.firc_number || '',
-      no_of_containers_bulk: report.no_of_containers_bulk || '',
-      inward_amount: report.inward_amount || '',
-      exchange_rate: report.exchange_rate || '',
-      shipping_bill_number: report.shipping_bill_number || '',
-      vessel_name: report.vessel_name || '',
-      bill_number: report.bill_number || '',
-      shipped_on_board_date: report.shipped_on_board_date ? report.shipped_on_board_date.split('T')[0] : ''
+      invoice_date: report.invoice_date
+        ? report.invoice_date.split("T")[0]
+        : "",
+      firc_date: report.firc_date ? report.firc_date.split("T")[0] : "",
+      shipping_bill_date: report.shipping_bill_date
+        ? report.shipping_bill_date.split("T")[0]
+        : "",
+      purchase_order_number: report.purchase_order_number || "",
+      purchase_order_date: report.purchase_order_date
+        ? report.purchase_order_date.split("T")[0]
+        : "",
+      qty: report.qty || "",
+      rate_in_usd: report.rate_in_usd || "",
+      firc_number: report.firc_number || "",
+      no_of_containers_bulk: report.no_of_containers_bulk || "",
+      inward_amount: report.inward_amount || "",
+      exchange_rate: report.exchange_rate || "",
+      shipping_bill_number: report.shipping_bill_number || "",
+      vessel_name: report.vessel_name || "",
+      bill_number: report.bill_number || "",
+      shipped_on_board_date: report.shipped_on_board_date
+        ? report.shipped_on_board_date.split("T")[0]
+        : "",
     });
     setEditingId(report.id);
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this sales report?')) {
+    if (window.confirm("Are you sure you want to delete this sales report?")) {
       try {
         await axios.delete(`${API_BASE_URL}/${id}`);
-        alert('Sales report deleted successfully');
+        alert("Sales report deleted successfully");
         fetchSalesReports();
       } catch (error) {
-        console.error('Error deleting sales report:', error);
-        alert('Error deleting sales report');
+        console.error("Error deleting sales report:", error);
+        alert("Error deleting sales report");
       }
     }
   };
 
   const formatNumber = (num) => {
-    return num ? parseFloat(num).toFixed(2) : '0.00';
+    return num ? parseFloat(num).toFixed(2) : "0.00";
   };
 
   const formatDate = (dateString) => {
-    return dateString ? new Date(dateString).toLocaleDateString() : '';
+    return dateString ? new Date(dateString).toLocaleDateString() : "";
   };
 
   return (
@@ -167,12 +176,14 @@ function App() {
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="h2 text-primary">Credence Resources - Sales Reports</h1>
-            <button 
+            <h1 className="h2 text-primary">
+              Credence Resources - Sales Reports
+            </h1>
+            <button
               className="btn btn-primary"
               onClick={() => setShowForm(!showForm)}
             >
-              {showForm ? 'Hide Form' : 'Add New Report'}
+              {showForm ? "Hide Form" : "Add New Report"}
             </button>
           </div>
 
@@ -239,12 +250,12 @@ function App() {
                   <button
                     className="btn btn-secondary"
                     onClick={() => {
-                      setSearchTerm('');
+                      setSearchTerm("");
                       setFilters({
-                        startDate: '',
-                        endDate: '',
-                        vesselName: '',
-                        purchaseOrderNumber: ''
+                        startDate: "",
+                        endDate: "",
+                        vesselName: "",
+                        purchaseOrderNumber: "",
                       });
                     }}
                   >
@@ -259,7 +270,9 @@ function App() {
           {showForm && (
             <div className="card mb-4">
               <div className="card-header">
-                <h5>{editingId ? 'Edit Sales Report' : 'Add New Sales Report'}</h5>
+                <h5>
+                  {editingId ? "Edit Sales Report" : "Add New Sales Report"}
+                </h5>
               </div>
               <div className="card-body">
                 <form onSubmit={handleSubmit}>
@@ -308,7 +321,9 @@ function App() {
 
                     {/* Text/Number Fields */}
                     <div className="col-md-4 mb-3">
-                      <label className="form-label">Purchase Order Number</label>
+                      <label className="form-label">
+                        Purchase Order Number
+                      </label>
                       <input
                         type="text"
                         className="form-control"
@@ -351,7 +366,9 @@ function App() {
                       />
                     </div>
                     <div className="col-md-4 mb-3">
-                      <label className="form-label">No of Containers (Bulk)</label>
+                      <label className="form-label">
+                        No of Containers (Bulk)
+                      </label>
                       <input
                         type="number"
                         step="0.01"
@@ -416,7 +433,9 @@ function App() {
                       />
                     </div>
                     <div className="col-md-4 mb-3">
-                      <label className="form-label">Shipped on Board Date</label>
+                      <label className="form-label">
+                        Shipped on Board Date
+                      </label>
                       <input
                         type="date"
                         className="form-control"
@@ -428,15 +447,19 @@ function App() {
                   </div>
 
                   <div className="d-flex gap-2">
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       className="btn btn-success"
                       disabled={loading}
                     >
-                      {loading ? 'Saving...' : (editingId ? 'Update Report' : 'Save Report')}
+                      {loading
+                        ? "Saving..."
+                        : editingId
+                        ? "Update Report"
+                        : "Save Report"}
                     </button>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="btn btn-secondary"
                       onClick={resetForm}
                     >
@@ -490,7 +513,9 @@ function App() {
                     <tbody>
                       {salesReports.length === 0 ? (
                         <tr>
-                          <td colSpan="20" className="text-center">No sales reports found</td>
+                          <td colSpan="20" className="text-center">
+                            No sales reports found
+                          </td>
                         </tr>
                       ) : (
                         salesReports.map((report) => (
@@ -501,14 +526,22 @@ function App() {
                             <td>{formatDate(report.purchase_order_date)}</td>
                             <td>{formatNumber(report.qty)}</td>
                             <td>${formatNumber(report.rate_in_usd)}</td>
-                            <td className="text-success fw-bold">${formatNumber(report.amount_in_usd)}</td>
+                            <td className="text-success fw-bold">
+                              ${formatNumber(report.amount_in_usd)}
+                            </td>
                             <td>{report.firc_number}</td>
                             <td>{formatDate(report.firc_date)}</td>
-                            <td className="text-info fw-bold">{formatNumber(report.no_of_containers_bulk)}</td>
+                            <td className="text-info fw-bold">
+                              {formatNumber(report.no_of_containers_bulk)}
+                            </td>
                             <td>${formatNumber(report.inward_amount)}</td>
                             <td>{formatNumber(report.exchange_rate)}</td>
-                            <td className="text-warning fw-bold">₹{formatNumber(report.inr_value)}</td>
-                            <td className="text-primary fw-bold">${formatNumber(report.balance)}</td>
+                            <td className="text-warning fw-bold">
+                              ₹{formatNumber(report.inr_value)}
+                            </td>
+                            <td className="text-primary fw-bold">
+                              ${formatNumber(report.balance)}
+                            </td>
                             <td>{report.shipping_bill_number}</td>
                             <td>{formatDate(report.shipping_bill_date)}</td>
                             <td>{report.vessel_name}</td>
