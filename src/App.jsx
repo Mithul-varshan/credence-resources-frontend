@@ -4,8 +4,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-// Use relative API calls since we have proxy configured
-// const API_BASE_URL = '/api';
+const API_BASE_URL = '/api/sales';
 
 function App() {
   const [salesReports, setSalesReports] = useState([]);
@@ -52,7 +51,7 @@ function App() {
       if (filters.vesselName) params.append('vessel_name', filters.vesselName);
       if (filters.purchaseOrderNumber) params.append('purchase_order_number', filters.purchaseOrderNumber);
 
-      const response = await axios.get(`${API_BASE_URL}/sales?${params}`);
+      const response = await axios.get(`${API_BASE_URL}`, { params });
       setSalesReports(response.data);
     } catch (error) {
       console.error('Error fetching sales reports:', error);
@@ -105,10 +104,10 @@ function App() {
 
     try {
       if (editingId) {
-        await axios.put(`https://credence-resources-backend.onrender.com/sales/${editingId}`, formData);
+        await axios.put(`${API_BASE_URL}/${editingId}`, formData);
         alert('Sales report updated successfully');
       } else {
-        await axios.post(`https://credence-resources-backend.onrender.com/sales`, formData);
+        await axios.post(`${API_BASE_URL}`, formData);
         alert('Sales report created successfully');
       }
       resetForm();
@@ -145,7 +144,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this sales report?')) {
       try {
-        await axios.delete(`${API_BASE_URL}/sales/${id}`);
+        await axios.delete(`${API_BASE_URL}/${id}`);
         alert('Sales report deleted successfully');
         fetchSalesReports();
       } catch (error) {
