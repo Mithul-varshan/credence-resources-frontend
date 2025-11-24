@@ -39,7 +39,7 @@ const ThreeBackground = () => {
     // Particle material with gradient colors
     const particlesMaterial = new THREE.PointsMaterial({
       size: 0.3,
-      color: 0x4a90e2,
+      color: 0x8b8e90, // Silver-grey quartz
       transparent: true,
       opacity: 0.6,
       blending: THREE.AdditiveBlending,
@@ -54,7 +54,7 @@ const ThreeBackground = () => {
     // Create wave geometry
     const waveGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
     const waveMaterial = new THREE.MeshBasicMaterial({
-      color: 0x2563eb,
+      color: 0x78909c, // Stone grey
       wireframe: true,
       transparent: true,
       opacity: 0.1,

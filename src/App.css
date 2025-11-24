@@ -6,9 +6,37 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a5568 100%);
+  background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+      circle at 20% 50%,
+      rgba(139, 142, 144, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(176, 190, 197, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 20%,
+      rgba(96, 125, 139, 0.1) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+  z-index: 0;
 }
 
 .App {
@@ -33,10 +61,12 @@ body {
 .app-logo {
   font-size: 1.5rem;
   font-weight: bold;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8b8e90 0%, #b0bec5 50%, #78909c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
 }
 
 .nav-tabs {
@@ -58,13 +88,13 @@ body {
 }
 
 .nav-tab:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(120, 144, 156, 0.1);
+  color: #546e7a;
 }
 
 .nav-tab.active {
-  color: #667eea;
-  background: rgba(102, 126, 234, 0.15);
+  color: #37474f;
+  background: rgba(176, 190, 197, 0.2);
 }
 
 .nav-tab.active::after {
@@ -75,7 +105,7 @@ body {
   transform: translateX(-50%);
   width: 60%;
   height: 3px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(90deg, #78909c 0%, #546e7a 100%);
   border-radius: 2px;
 }
 
@@ -86,9 +116,9 @@ body {
 
 .export-btn {
   padding: 0.5rem 1rem;
-  border: 1px solid #667eea;
+  border: 2px solid #78909c;
   background: white;
-  color: #667eea;
+  color: #546e7a;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.875rem;
@@ -100,10 +130,11 @@ body {
 }
 
 .export-btn:hover {
-  background: #667eea;
+  background: linear-gradient(135deg, #78909c 0%, #546e7a 100%);
   color: white;
+  border-color: #546e7a;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(84, 110, 122, 0.3);
 }
 
 /* Dashboard Styles */
@@ -152,11 +183,12 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #78909c 0%, #546e7a 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .stat-title {
@@ -260,11 +292,12 @@ body {
   white-space: nowrap;
   font-size: 0.875rem;
   padding: 0.75rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #455a64 0%, #37474f 100%);
+  color: #eceff1;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-bottom: 3px solid #78909c;
 }
 
 .table td {
@@ -280,9 +313,9 @@ body {
 }
 
 .table tbody tr:hover {
-  background-color: rgba(102, 126, 234, 0.05) !important;
+  background-color: rgba(120, 144, 156, 0.08) !important;
   transform: scale(1.01);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .card {
@@ -298,10 +331,10 @@ body {
 .card-header {
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.1) 0%,
-    rgba(118, 75, 162, 0.1) 100%
+    rgba(120, 144, 156, 0.15) 0%,
+    rgba(96, 125, 139, 0.15) 100%
   );
-  border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+  border-bottom: 2px solid rgba(120, 144, 156, 0.3);
   border-radius: 16px 16px 0 0 !important;
   padding: 1.25rem;
 }
@@ -332,14 +365,16 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #78909c 0%, #546e7a 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(84, 110, 122, 0.3);
+  border: none;
 }
 
 .btn-primary:hover {
+  background: linear-gradient(135deg, #546e7a 0%, #455a64 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(69, 90, 100, 0.4);
 }
 
 .btn-success {
@@ -364,16 +399,17 @@ body {
 }
 
 .btn-outline-primary {
-  border: 2px solid #667eea;
-  color: #667eea;
+  border: 2px solid #78909c;
+  color: #546e7a;
   background: white;
 }
 
 .btn-outline-primary:hover {
-  background: #667eea;
+  background: linear-gradient(135deg, #78909c 0%, #546e7a 100%);
   color: white;
+  border-color: #546e7a;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(84, 110, 122, 0.3);
 }
 
 .btn-outline-danger {
@@ -399,7 +435,7 @@ body {
   width: 3rem;
   height: 3rem;
   border-width: 0.3rem;
-  border-color: #667eea;
+  border-color: #78909c;
   border-right-color: transparent;
 }
 
@@ -420,14 +456,14 @@ body {
 }
 
 .form-control:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #78909c;
+  box-shadow: 0 0 0 3px rgba(120, 144, 156, 0.15);
   outline: none;
 }
 
 /* Text colors */
 .text-primary {
-  color: #667eea !important;
+  color: #546e7a !important;
 }
 
 .text-success {
@@ -491,7 +527,7 @@ body {
 }
 
 .Toastify__toast--info {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #78909c 0%, #546e7a 100%);
 }
 
 /* Responsive table improvements */
@@ -566,7 +602,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8b8e90 0%, #b0bec5 50%, #78909c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

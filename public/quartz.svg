@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="quartzGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b8e90;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#b0bec5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#78909c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="darkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#546e7a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#455a64;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main crystal structure -->
+  <g transform="translate(50, 50)">
+    <!-- Center large crystal -->
+    <path d="M 0,-35 L 15,-10 L 15,20 L 0,40 L -15,20 L -15,-10 Z" 
+          fill="url(#quartzGradient)" 
+          stroke="#37474f" 
+          stroke-width="2"/>
+    
+    <!-- Left crystal -->
+    <path d="M -15,-10 L -25,-5 L -30,10 L -15,20 Z" 
+          fill="url(#darkGradient)" 
+          stroke="#37474f" 
+          stroke-width="1.5"
+          opacity="0.9"/>
+    
+    <!-- Right crystal -->
+    <path d="M 15,-10 L 25,-5 L 30,10 L 15,20 Z" 
+          fill="url(#darkGradient)" 
+          stroke="#37474f" 
+          stroke-width="1.5"
+          opacity="0.9"/>
+    
+    <!-- Top left small crystal -->
+    <path d="M -10,-30 L 0,-35 L -5,-15 Z" 
+          fill="#b0bec5" 
+          stroke="#37474f" 
+          stroke-width="1.5"
+          opacity="0.8"/>
+    
+    <!-- Top right small crystal -->
+    <path d="M 10,-30 L 0,-35 L 5,-15 Z" 
+          fill="#b0bec5" 
+          stroke="#37474f" 
+          stroke-width="1.5"
+          opacity="0.8"/>
+    
+    <!-- Shine effects -->
+    <path d="M -8,-20 L -5,-15 L -10,-12" 
+          fill="none" 
+          stroke="#eceff1" 
+          stroke-width="1.5"
+          opacity="0.6"/>
+    
+    <path d="M 8,-20 L 5,-15 L 10,-12" 
+          fill="none" 
+          stroke="#eceff1" 
+          stroke-width="1.5"
+          opacity="0.6"/>
+    
+    <ellipse cx="0" cy="0" rx="4" ry="6" 
+             fill="#ffffff" 
+             opacity="0.3"/>
+  </g>
+</svg>
