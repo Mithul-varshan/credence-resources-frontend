@@ -177,7 +177,7 @@ function App() {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h1 className="h2 text-primary">
-              Credence Resources - Sales Report
+              Credence Resources - Sales Reports
             </h1>
             <button
               className="btn btn-primary"
