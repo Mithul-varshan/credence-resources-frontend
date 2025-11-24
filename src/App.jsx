@@ -1,8 +1,14 @@
 // src/App.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import ThreeBackground from "./components/ThreeBackground";
+import Dashboard from "./components/Dashboard";
+import { exportToCSV, exportToExcel } from "./utils/exportUtils";
+import { Download, FileSpreadsheet, BarChart3, Table } from "lucide-react";
 
 const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/sales`;
 
@@ -12,6 +18,7 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("dashboard"); // 'dashboard' or 'reports'
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
@@ -54,9 +61,10 @@ function App() {
 
       const response = await axios.get(`${API_BASE_URL}`, { params });
       setSalesReports(response.data);
+      toast.success("Data loaded successfully!", { autoClose: 2000 });
     } catch (error) {
       console.error("Error fetching sales reports:", error);
-      alert("Error fetching sales reports");
+      toast.error("Error fetching sales reports. Please try again.");
     }
     setLoading(false);
   };
@@ -106,16 +114,16 @@ function App() {
     try {
       if (editingId) {
         await axios.put(`${API_BASE_URL}/${editingId}`, formData);
-        alert("Sales report updated successfully");
+        toast.success("Sales report updated successfully!");
       } else {
         await axios.post(`${API_BASE_URL}`, formData);
-        alert("Sales report created successfully");
+        toast.success("Sales report created successfully!");
       }
       resetForm();
       fetchSalesReports();
     } catch (error) {
       console.error("Error saving sales report:", error);
-      alert("Error saving sales report");
+      toast.error("Error saving sales report. Please try again.");
     }
     setLoading(false);
   };
@@ -154,12 +162,35 @@ function App() {
     if (window.confirm("Are you sure you want to delete this sales report?")) {
       try {
         await axios.delete(`${API_BASE_URL}/${id}`);
-        alert("Sales report deleted successfully");
+        toast.success("Sales report deleted successfully!");
         fetchSalesReports();
       } catch (error) {
         console.error("Error deleting sales report:", error);
-        alert("Error deleting sales report");
+        toast.error("Error deleting sales report. Please try again.");
       }
+    }
+  };
+
+  const handleExport = (format) => {
+    if (salesReports.length === 0) {
+      toast.warning("No data to export!");
+      return;
+    }
+
+    const timestamp = new Date().toISOString().split('T')[0];
+    const filename = `sales_report_${timestamp}`;
+
+    switch (format) {
+      case 'csv':
+        exportToCSV(salesReports, `${filename}.csv`);
+        toast.success("Exported to CSV successfully!");
+        break;
+      case 'excel':
+        exportToExcel(salesReports, `${filename}.xlsx`);
+        toast.success("Exported to Excel successfully!");
+        break;
+      default:
+        toast.error("Invalid export format");
     }
   };
 
@@ -172,12 +203,72 @@ function App() {
   };
 
   return (
-    <div className="container-fluid py-4">
-      <div className="row">
-        <div className="col-12">
+    <div className="App">
+      <ThreeBackground />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+      {/* Navigation */}
+      <nav className="app-nav">
+        <div className="app-logo">
+          Credence Resources
+        </div>
+        <div className="nav-tabs">
+          <button
+            className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            <BarChart3 size={18} style={{ marginRight: '0.5rem', display: 'inline' }} />
+            Dashboard
+          </button>
+          <button
+            className={`nav-tab ${activeTab === 'reports' ? 'active' : ''}`}
+            onClick={() => setActiveTab('reports')}
+          >
+            <Table size={18} style={{ marginRight: '0.5rem', display: 'inline' }} />
+            Sales Reports
+          </button>
+        </div>
+        <div className="export-buttons">
+          <button
+            className="export-btn"
+            onClick={() => handleExport('csv')}
+            title="Export to CSV"
+          >
+            <FileSpreadsheet size={16} />
+            CSV
+          </button>
+          <button
+            className="export-btn"
+            onClick={() => handleExport('excel')}
+            title="Export to Excel"
+          >
+            <Download size={16} />
+            Excel
+          </button>
+        </div>
+      </nav>
+
+      <div className="content-wrapper">
+        {activeTab === 'dashboard' ? (
+          <Dashboard salesReports={salesReports} />
+        ) : (
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="h2 text-primary">
-              Credence Resources - Sales Reports
+            <h1 className="h2" style={{ color: 'white', fontWeight: 700, textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
+              Sales Reports Management
             </h1>
             <button
               className="btn btn-primary"
@@ -572,7 +663,10 @@ function App() {
               )}
             </div>
           </div>
-        </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
