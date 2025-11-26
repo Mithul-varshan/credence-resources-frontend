@@ -62,7 +62,6 @@ function App() {
 
       const response = await axios.get(`${API_BASE_URL}`, { params });
       setSalesReports(response.data);
-      toast.success("Data loaded successfully!", { autoClose: 2000 });
     } catch (error) {
       console.error("Error fetching sales reports:", error);
       toast.error("Error fetching sales reports. Please try again.");
