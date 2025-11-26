@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import ThreeBackground from "./components/ThreeBackground";
 import Dashboard from "./components/Dashboard";
+import { TableSkeleton } from "./components/SkeletonLoader";
 import { exportToCSV, exportToExcel } from "./utils/exportUtils";
 import { Download, FileSpreadsheet, BarChart3, Table } from "lucide-react";
 
@@ -177,15 +178,15 @@ function App() {
       return;
     }
 
-    const timestamp = new Date().toISOString().split('T')[0];
+    const timestamp = new Date().toISOString().split("T")[0];
     const filename = `sales_report_${timestamp}`;
 
     switch (format) {
-      case 'csv':
+      case "csv":
         exportToCSV(salesReports, `${filename}.csv`);
         toast.success("Exported to CSV successfully!");
         break;
-      case 'excel':
+      case "excel":
         exportToExcel(salesReports, `${filename}.xlsx`);
         toast.success("Exported to Excel successfully!");
         break;
@@ -220,29 +221,33 @@ function App() {
 
       {/* Navigation */}
       <nav className="app-nav">
-        <div className="app-logo">
-          Credence Resources
-        </div>
+        <div className="app-logo">Credence Resources</div>
         <div className="nav-tabs">
           <button
-            className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setActiveTab('dashboard')}
+            className={`nav-tab ${activeTab === "dashboard" ? "active" : ""}`}
+            onClick={() => setActiveTab("dashboard")}
           >
-            <BarChart3 size={18} style={{ marginRight: '0.5rem', display: 'inline' }} />
+            <BarChart3
+              size={18}
+              style={{ marginRight: "0.5rem", display: "inline" }}
+            />
             Dashboard
           </button>
           <button
-            className={`nav-tab ${activeTab === 'reports' ? 'active' : ''}`}
-            onClick={() => setActiveTab('reports')}
+            className={`nav-tab ${activeTab === "reports" ? "active" : ""}`}
+            onClick={() => setActiveTab("reports")}
           >
-            <Table size={18} style={{ marginRight: '0.5rem', display: 'inline' }} />
+            <Table
+              size={18}
+              style={{ marginRight: "0.5rem", display: "inline" }}
+            />
             Sales Reports
           </button>
         </div>
         <div className="export-buttons">
           <button
             className="export-btn"
-            onClick={() => handleExport('csv')}
+            onClick={() => handleExport("csv")}
             title="Export to CSV"
           >
             <FileSpreadsheet size={16} />
@@ -250,7 +255,7 @@ function App() {
           </button>
           <button
             className="export-btn"
-            onClick={() => handleExport('excel')}
+            onClick={() => handleExport("excel")}
             title="Export to Excel"
           >
             <Download size={16} />
@@ -260,409 +265,426 @@ function App() {
       </nav>
 
       <div className="content-wrapper">
-        {activeTab === 'dashboard' ? (
-          <Dashboard salesReports={salesReports} />
+        {activeTab === "dashboard" ? (
+          <Dashboard salesReports={salesReports} loading={loading} />
         ) : (
           <div className="container-fluid">
             <div className="row">
               <div className="col-12">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="h2" style={{ color: 'white', fontWeight: 700, textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
-              Sales Reports Management
-            </h1>
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowForm(!showForm)}
-            >
-              {showForm ? "Hide Form" : "Add New Report"}
-            </button>
-          </div>
-
-          {/* Search and Filter Section */}
-          <div className="card mb-4">
-            <div className="card-header">
-              <h5>Search & Filter</h5>
-            </div>
-            <div className="card-body">
-              <div className="row">
-                <div className="col-md-3 mb-3">
-                  <label className="form-label">Search</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search by PO, FIRC, Bill numbers..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <label className="form-label">Start Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="startDate"
-                    value={filters.startDate}
-                    onChange={handleFilterChange}
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <label className="form-label">End Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="endDate"
-                    value={filters.endDate}
-                    onChange={handleFilterChange}
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <label className="form-label">Vessel Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="vesselName"
-                    value={filters.vesselName}
-                    onChange={handleFilterChange}
-                    placeholder="Filter by vessel"
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <label className="form-label">PO Number</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="purchaseOrderNumber"
-                    value={filters.purchaseOrderNumber}
-                    onChange={handleFilterChange}
-                    placeholder="Filter by PO"
-                  />
-                </div>
-                <div className="col-md-1 mb-3 d-flex align-items-end">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => {
-                      setSearchTerm("");
-                      setFilters({
-                        startDate: "",
-                        endDate: "",
-                        vesselName: "",
-                        purchaseOrderNumber: "",
-                      });
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <h1
+                    className="h2"
+                    style={{
+                      color: "white",
+                      fontWeight: 700,
+                      textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
                     }}
                   >
-                    Clear
+                    Sales Reports Management
+                  </h1>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setShowForm(!showForm)}
+                  >
+                    {showForm ? "Hide Form" : "Add New Report"}
                   </button>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Form Section */}
-          {showForm && (
-            <div className="card mb-4">
-              <div className="card-header">
-                <h5>
-                  {editingId ? "Edit Sales Report" : "Add New Sales Report"}
-                </h5>
-              </div>
-              <div className="card-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="row">
-                    {/* Date Fields */}
-                    <div className="col-md-3 mb-3">
-                      <label className="form-label">Invoice Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        name="invoice_date"
-                        value={formData.invoice_date}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-3">
-                      <label className="form-label">FIRC Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        name="firc_date"
-                        value={formData.firc_date}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-3">
-                      <label className="form-label">Shipping Bill Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        name="shipping_bill_date"
-                        value={formData.shipping_bill_date}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-3">
-                      <label className="form-label">Purchase Order Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        name="purchase_order_date"
-                        value={formData.purchase_order_date}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* Text/Number Fields */}
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">
-                        Purchase Order Number
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="purchase_order_number"
-                        value={formData.purchase_order_number}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Quantity</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        name="qty"
-                        value={formData.qty}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Rate in USD</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        name="rate_in_usd"
-                        value={formData.rate_in_usd}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">FIRC Number</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="firc_number"
-                        value={formData.firc_number}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">
-                        No of Containers (Bulk)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        name="no_of_containers_bulk"
-                        value={formData.no_of_containers_bulk}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Inward Amount</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        name="inward_amount"
-                        value={formData.inward_amount}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Exchange Rate</label>
-                      <input
-                        type="number"
-                        step="0.0001"
-                        className="form-control"
-                        name="exchange_rate"
-                        value={formData.exchange_rate}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Shipping Bill Number</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="shipping_bill_number"
-                        value={formData.shipping_bill_number}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Vessel Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="vessel_name"
-                        value={formData.vessel_name}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Bill Number</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="bill_number"
-                        value={formData.bill_number}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">
-                        Shipped on Board Date
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        name="shipped_on_board_date"
-                        value={formData.shipped_on_board_date}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                {/* Search and Filter Section */}
+                <div className="card mb-4">
+                  <div className="card-header">
+                    <h5>Search & Filter</h5>
                   </div>
-
-                  <div className="d-flex gap-2">
-                    <button
-                      type="submit"
-                      className="btn btn-success"
-                      disabled={loading}
-                    >
-                      {loading
-                        ? "Saving..."
-                        : editingId
-                        ? "Update Report"
-                        : "Save Report"}
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={resetForm}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-
-          {/* Sales Reports Table */}
-          <div className="card">
-            <div className="card-header">
-              <h5>Sales Reports ({salesReports.length} records)</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="text-center">
-                  <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-md-3 mb-3">
+                        <label className="form-label">Search</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search by PO, FIRC, Bill numbers..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-2 mb-3">
+                        <label className="form-label">Start Date</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          name="startDate"
+                          value={filters.startDate}
+                          onChange={handleFilterChange}
+                        />
+                      </div>
+                      <div className="col-md-2 mb-3">
+                        <label className="form-label">End Date</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          name="endDate"
+                          value={filters.endDate}
+                          onChange={handleFilterChange}
+                        />
+                      </div>
+                      <div className="col-md-2 mb-3">
+                        <label className="form-label">Vessel Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="vesselName"
+                          value={filters.vesselName}
+                          onChange={handleFilterChange}
+                          placeholder="Filter by vessel"
+                        />
+                      </div>
+                      <div className="col-md-2 mb-3">
+                        <label className="form-label">PO Number</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="purchaseOrderNumber"
+                          value={filters.purchaseOrderNumber}
+                          onChange={handleFilterChange}
+                          placeholder="Filter by PO"
+                        />
+                      </div>
+                      <div className="col-md-1 mb-3 d-flex align-items-end">
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => {
+                            setSearchTerm("");
+                            setFilters({
+                              startDate: "",
+                              endDate: "",
+                              vesselName: "",
+                              purchaseOrderNumber: "",
+                            });
+                          }}
+                        >
+                          Clear
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ) : (
-                <div className="table-responsive">
-                  <table className="table table-striped table-hover">
-                    <thead className="table-dark">
-                      <tr>
-                        <th>ID</th>
-                        <th>Invoice Date</th>
-                        <th>PO Number</th>
-                        <th>PO Date</th>
-                        <th>Qty</th>
-                        <th>Rate USD</th>
-                        <th>Amount USD</th>
-                        <th>FIRC Number</th>
-                        <th>FIRC Date</th>
-                        <th>Containers</th>
-                        <th>Inward Amount</th>
-                        <th>Exchange Rate</th>
-                        <th>INR Value</th>
-                        <th>Balance</th>
-                        <th>Shipping Bill</th>
-                        <th>Shipping Date</th>
-                        <th>Vessel Name</th>
-                        <th>Bill Number</th>
-                        <th>Board Date</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {salesReports.length === 0 ? (
-                        <tr>
-                          <td colSpan="20" className="text-center">
-                            No sales reports found
-                          </td>
-                        </tr>
-                      ) : (
-                        salesReports.map((report) => (
-                          <tr key={report.id}>
-                            <td>{report.id}</td>
-                            <td>{formatDate(report.invoice_date)}</td>
-                            <td>{report.purchase_order_number}</td>
-                            <td>{formatDate(report.purchase_order_date)}</td>
-                            <td>{formatNumber(report.qty)}</td>
-                            <td>${formatNumber(report.rate_in_usd)}</td>
-                            <td className="text-success fw-bold">
-                              ${formatNumber(report.amount_in_usd)}
-                            </td>
-                            <td>{report.firc_number}</td>
-                            <td>{formatDate(report.firc_date)}</td>
-                            <td className="text-info fw-bold">
-                              {formatNumber(report.no_of_containers_bulk)}
-                            </td>
-                            <td>${formatNumber(report.inward_amount)}</td>
-                            <td>{formatNumber(report.exchange_rate)}</td>
-                            <td className="text-warning fw-bold">
-                              ₹{formatNumber(report.inr_value)}
-                            </td>
-                            <td className="text-primary fw-bold">
-                              ${formatNumber(report.balance)}
-                            </td>
-                            <td>{report.shipping_bill_number}</td>
-                            <td>{formatDate(report.shipping_bill_date)}</td>
-                            <td>{report.vessel_name}</td>
-                            <td>{report.bill_number}</td>
-                            <td>{formatDate(report.shipped_on_board_date)}</td>
-                            <td>
-                              <div className="btn-group" role="group">
-                                <button
-                                  className="btn btn-sm btn-outline-primary"
-                                  onClick={() => handleEdit(report)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="btn btn-sm btn-outline-danger"
-                                  onClick={() => handleDelete(report.id)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
+
+                {/* Form Section */}
+                {showForm && (
+                  <div className="card mb-4">
+                    <div className="card-header">
+                      <h5>
+                        {editingId
+                          ? "Edit Sales Report"
+                          : "Add New Sales Report"}
+                      </h5>
+                    </div>
+                    <div className="card-body">
+                      <form onSubmit={handleSubmit}>
+                        <div className="row">
+                          {/* Date Fields */}
+                          <div className="col-md-3 mb-3">
+                            <label className="form-label">Invoice Date</label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="invoice_date"
+                              value={formData.invoice_date}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-3 mb-3">
+                            <label className="form-label">FIRC Date</label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="firc_date"
+                              value={formData.firc_date}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-3 mb-3">
+                            <label className="form-label">
+                              Shipping Bill Date
+                            </label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="shipping_bill_date"
+                              value={formData.shipping_bill_date}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-3 mb-3">
+                            <label className="form-label">
+                              Purchase Order Date
+                            </label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="purchase_order_date"
+                              value={formData.purchase_order_date}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+
+                          {/* Text/Number Fields */}
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">
+                              Purchase Order Number
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="purchase_order_number"
+                              value={formData.purchase_order_number}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">Quantity</label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              className="form-control"
+                              name="qty"
+                              value={formData.qty}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">Rate in USD</label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              className="form-control"
+                              name="rate_in_usd"
+                              value={formData.rate_in_usd}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">FIRC Number</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="firc_number"
+                              value={formData.firc_number}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">
+                              No of Containers (Bulk)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              className="form-control"
+                              name="no_of_containers_bulk"
+                              value={formData.no_of_containers_bulk}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">Inward Amount</label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              className="form-control"
+                              name="inward_amount"
+                              value={formData.inward_amount}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">Exchange Rate</label>
+                            <input
+                              type="number"
+                              step="0.0001"
+                              className="form-control"
+                              name="exchange_rate"
+                              value={formData.exchange_rate}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">
+                              Shipping Bill Number
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="shipping_bill_number"
+                              value={formData.shipping_bill_number}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">Vessel Name</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="vessel_name"
+                              value={formData.vessel_name}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">Bill Number</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="bill_number"
+                              value={formData.bill_number}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-4 mb-3">
+                            <label className="form-label">
+                              Shipped on Board Date
+                            </label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="shipped_on_board_date"
+                              value={formData.shipped_on_board_date}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="d-flex gap-2">
+                          <button
+                            type="submit"
+                            className="btn btn-success"
+                            disabled={loading}
+                          >
+                            {loading
+                              ? "Saving..."
+                              : editingId
+                              ? "Update Report"
+                              : "Save Report"}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={resetForm}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sales Reports Table */}
+                <div className="card">
+                  <div className="card-header">
+                    <h5>Sales Reports ({salesReports.length} records)</h5>
+                  </div>
+                  <div className="card-body">
+                    {loading ? (
+                      <TableSkeleton rows={8} columns={20} />
+                    ) : (
+                      <div className="table-responsive">
+                        <table className="table table-striped table-hover">
+                          <thead className="table-dark">
+                            <tr>
+                              <th>ID</th>
+                              <th>Invoice Date</th>
+                              <th>PO Number</th>
+                              <th>PO Date</th>
+                              <th>Qty</th>
+                              <th>Rate USD</th>
+                              <th>Amount USD</th>
+                              <th>FIRC Number</th>
+                              <th>FIRC Date</th>
+                              <th>Containers</th>
+                              <th>Inward Amount</th>
+                              <th>Exchange Rate</th>
+                              <th>INR Value</th>
+                              <th>Balance</th>
+                              <th>Shipping Bill</th>
+                              <th>Shipping Date</th>
+                              <th>Vessel Name</th>
+                              <th>Bill Number</th>
+                              <th>Board Date</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {salesReports.length === 0 ? (
+                              <tr>
+                                <td colSpan="20" className="text-center">
+                                  No sales reports found
+                                </td>
+                              </tr>
+                            ) : (
+                              salesReports.map((report) => (
+                                <tr key={report.id}>
+                                  <td>{report.id}</td>
+                                  <td>{formatDate(report.invoice_date)}</td>
+                                  <td>{report.purchase_order_number}</td>
+                                  <td>
+                                    {formatDate(report.purchase_order_date)}
+                                  </td>
+                                  <td>{formatNumber(report.qty)}</td>
+                                  <td>${formatNumber(report.rate_in_usd)}</td>
+                                  <td className="text-success fw-bold">
+                                    ${formatNumber(report.amount_in_usd)}
+                                  </td>
+                                  <td>{report.firc_number}</td>
+                                  <td>{formatDate(report.firc_date)}</td>
+                                  <td className="text-info fw-bold">
+                                    {formatNumber(report.no_of_containers_bulk)}
+                                  </td>
+                                  <td>${formatNumber(report.inward_amount)}</td>
+                                  <td>{formatNumber(report.exchange_rate)}</td>
+                                  <td className="text-warning fw-bold">
+                                    ₹{formatNumber(report.inr_value)}
+                                  </td>
+                                  <td className="text-primary fw-bold">
+                                    ${formatNumber(report.balance)}
+                                  </td>
+                                  <td>{report.shipping_bill_number}</td>
+                                  <td>
+                                    {formatDate(report.shipping_bill_date)}
+                                  </td>
+                                  <td>{report.vessel_name}</td>
+                                  <td>{report.bill_number}</td>
+                                  <td>
+                                    {formatDate(report.shipped_on_board_date)}
+                                  </td>
+                                  <td>
+                                    <div className="btn-group" role="group">
+                                      <button
+                                        className="btn btn-sm btn-outline-primary"
+                                        onClick={() => handleEdit(report)}
+                                      >
+                                        Edit
+                                      </button>
+                                      <button
+                                        className="btn btn-sm btn-outline-danger"
+                                        onClick={() => handleDelete(report.id)}
+                                      >
+                                        Delete
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
               </div>
             </div>
           </div>

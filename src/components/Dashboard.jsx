@@ -23,8 +23,10 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
+import { DashboardSkeleton } from "./SkeletonLoader";
+import "./SkeletonLoader.css";
 
-const Dashboard = ({ salesReports }) => {
+const Dashboard = ({ salesReports, loading }) => {
   const analytics = useMemo(() => {
     if (!salesReports || salesReports.length === 0) {
       return {
@@ -141,6 +143,11 @@ const Dashboard = ({ salesReports }) => {
       )}
     </motion.div>
   );
+
+  // Show skeleton loader while loading
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="dashboard-container">
